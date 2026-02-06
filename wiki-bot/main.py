@@ -5,12 +5,11 @@ from config import WIKI_URL, COOKIES_FILE
 from crawler import get_all_wiki_paths, crawl_wiki_pages_async
 from vector_store import populate_vector_store
 from graph import build_workflow
+from fun_args import argumentize
 
 
-async def main():
-    should_reset = "--reset" in sys.argv
-
-    if should_reset:
+async def main(reset: bool = False):
+    if reset:
 
         # 1. Load cookies
         try:
@@ -25,7 +24,7 @@ async def main():
         documents = await crawl_wiki_pages_async(urls, cookie_list)
 
         # 3. Index
-        populate_vector_store(documents, reset=should_reset)
+        populate_vector_store(documents, reset=reset)
     else:
         print("Using existing vector store (pass --reset to refresh).")
 
@@ -47,4 +46,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(argumentize(main))
