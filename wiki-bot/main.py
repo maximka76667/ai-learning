@@ -5,7 +5,6 @@ from config import WIKI_URL, COOKIES_FILE
 from crawler import get_all_wiki_paths, crawl_wiki_pages_async
 from vector_store import populate_vector_store
 from graph import build_workflow
-from logger import update_line
 
 
 async def main():
@@ -34,7 +33,7 @@ async def main():
     app = build_workflow()
 
     initial_state = {
-        "query": "Explain me PCU. What microcontroller is used in it?",
+        "query": "What's the purpose of Sd logger?",
         "intent_node_output_ok": False,
         "intent_node_output": None,
         "search_node_output": None,
@@ -42,8 +41,9 @@ async def main():
         "summarize_node_output": None,
     }
 
+    print(f"Question: {initial_state['query']}")
     final_state = await app.ainvoke(initial_state)
-    update_line(f"Final answer: {final_state['summarize_node_output']}")
+    print(f"\rAnswer: {final_state['summarize_node_output']}\n")
 
 
 if __name__ == "__main__":
